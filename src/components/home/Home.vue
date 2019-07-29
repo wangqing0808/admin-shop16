@@ -25,9 +25,39 @@
     </el-header>
     <!-- 左侧边栏 -->
     <el-container>
-      <el-aside width="200px">Aside</el-aside>
+      <el-aside width="200px">
+        <el-menu
+          :router='true'
+          default-active="handleUrl()"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+        >
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="users">用户列表</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>权限管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="roles">角色列表</el-menu-item>
+              <el-menu-item index="rights">权限列表</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
       <!-- 主体部分 -->
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 
@@ -47,6 +77,7 @@ export default {
           message: '退出成功!',
           duration: 800
         })
+        localStorage.removeItem('token')
         this.$router.push('/login')
       }).catch(() => {
         this.$message({
@@ -55,6 +86,16 @@ export default {
           duration: 800
         })
       })
+    },
+    handleOpen () {
+      console.log('打开了')
+    },
+    handleClose () {
+      console.log('关闭了')
+    },
+
+    handleUrl () {
+      return this.$route.path
     }
   }
 
@@ -67,7 +108,7 @@ export default {
   height: 100%;
 }
 .el-header {
-  background-color: pink;
+  background-color: #b3c1cd;
   padding: 0;
   h1 {
     color: #fff;
@@ -84,9 +125,9 @@ export default {
   }
 }
 .el-aside {
-  background-color: skyblue;
+  background-color: #545c64;
 }
 .el-main {
-  background-color: hotpink;
+  background-color: #eaeef1;
 }
 </style>
