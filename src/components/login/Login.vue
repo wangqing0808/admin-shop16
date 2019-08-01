@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -65,7 +64,7 @@ export default {
         if (!valid) {
           return false
         }
-        axios.post('http://localhost:8888/api/private/v1/login', this.loginForm).then(res => {
+        this.$axios.post('login', this.loginForm).then(res => {
           console.log(res)
           localStorage.setItem('token', res.data.data.token)
           if (res.data.meta.status === 200) {

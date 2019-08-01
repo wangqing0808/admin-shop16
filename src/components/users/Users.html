@@ -21,9 +21,39 @@
       </el-input>
     </el-col>
     <el-col :span="8">
-      <el-button>添加用户</el-button>
+      <el-button @click="dialogAddUserFormShow">添加用户</el-button>
     </el-col>
   </el-row>
+  <!-- 弹出对话框 -->
+  <el-dialog
+    title="添加用户"
+    :visible.sync="dialogAddUserFormVisible"
+    @closed="dialogAddUserFormClose"
+  >
+    <el-form
+      :model="AddUserForm"
+      label-width="80px"
+      :rules="rules"
+      ref="AddUserForm"
+    >
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="AddUserForm.username"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="AddUserForm.password"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="AddUserForm.email"></el-input>
+      </el-form-item>
+      <el-form-item label="手机" prop="mobile">
+        <el-input v-model="AddUserForm.mobile"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogAddUserFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="addUser">确 定</el-button>
+    </div>
+  </el-dialog>
 
   <!-- 表格 -->
   <el-table :data="userData" style="width: 100%">
@@ -31,8 +61,38 @@
     </el-table-column>
     <el-table-column prop="email" label="邮箱"> </el-table-column>
     <el-table-column prop="mobile" label="电话" width="180"> </el-table-column>
-    <el-table-column prop="address" label="状态"> </el-table-column>
-    <el-table-column prop="address" label="操作"> </el-table-column>
+    <el-table-column prop="address" label="状态">
+      <!-- 自定义列 -->
+      <template slot-scope="scope">
+        <el-switch
+          v-model="scope.row.mg_state"
+          @change="changeStatus(scope.row)"
+        >
+        </el-switch>
+      </template>
+    </el-table-column>
+    <el-table-column prop="address" label="操作">
+      <!-- 自定义列 -->
+      <template slot-scope="scope">
+        <el-button
+          type="primary"
+          icon="el-icon-edit"
+          size="mini"
+          plain
+          @click="dialogEditFormShow(scope.row)"
+        ></el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          size="mini"
+          plain
+          @click="delUsers(scope.row.id)"
+        ></el-button>
+        <el-button type="success" icon="el-icon-check" size="mini" plain
+          >分配角色</el-button
+        >
+      </template>
+    </el-table-column>
   </el-table>
   <!-- 分页 -->
   <el-pagination
@@ -44,4 +104,22 @@
     @current-change="changeCurrentPage"
   >
   </el-pagination>
+  <!-- 编辑框 -->
+  <el-dialog title="编辑用户" :visible.sync="dialogEditFormVisible">
+    <el-form :model="EditForm" label-width="80px" :rules="rules" ref="EditForm">
+      <el-form-item label="用户名" prop="username">
+        <el-tag>{{ EditForm.username }}</el-tag>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="EditForm.email"></el-input>
+      </el-form-item>
+      <el-form-item label="手机" prop="mobile">
+        <el-input v-model="EditForm.mobile"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogEditFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="editUser">确 定</el-button>
+    </div>
+  </el-dialog>
 </div>
